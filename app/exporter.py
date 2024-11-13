@@ -32,7 +32,7 @@ class MetricExporter:
         self.metric_type = metric_type  # Store metrics
         # we have verified that there is at least one target
         self.labels = set(targets[0].keys())
-        # for now we only support exporting one type of cost (Usage)
+        # for now, we only support exporting one type of cost (Usage)
         self.labels.add("ChargeType")
         if group_by["enabled"]:
             for group in group_by["groups"]:
@@ -76,7 +76,11 @@ class MetricExporter:
         return assumed_role_object["Credentials"]
 
     def query_aws_cost_explorer(self, aws_client, group_by):
+        # The end date is exclusive. For example, if end is 2017-05-01, Amazon Web Services retrieves cost and usage
+        # data from the start date up to, but not including, 2017-05-01
         end_date = datetime.today()
+        # The start date is inclusive. For example, if start is 2017-01-01, Amazon Web Services retrieves cost and
+        # usage data starting at 2017-01-01 up to the end date
         start_date = end_date - relativedelta(days=1)
         groups = list()
         if group_by["enabled"]:
@@ -107,6 +111,7 @@ class MetricExporter:
             region_name="us-east-1",
         )
         cost_response = self.query_aws_cost_explorer(aws_client, self.group_by)
+        print(cost_response)
 
         for result in cost_response:
             if not self.group_by["enabled"]:
