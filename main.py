@@ -88,28 +88,6 @@ def validate_configs(config):
             )
             sys.exit(1)
 
-    for i in range(1, len(config["target_aws_accounts"])):
-        if labels != config["target_aws_accounts"][i].keys():
-            logging.error("All the target AWS accounts should have the same set of keys (labels)!")
-            sys.exit(1)
-
-    for config_metric in config["metrics"]:
-
-        if config_metric["group_by"]["enabled"]:
-            if len(config_metric["group_by"]["groups"]) < 1 or len(config_metric["group_by"]["groups"]) > 2:
-                logging.error("If group_by is enabled, there should be at least one group, and at most two groups!")
-                sys.exit(1)
-            group_label_names = set()
-            for group in config_metric["group_by"]["groups"]:
-                if group["label_name"] in group_label_names:
-                    logging.error("Group label names should be unique!")
-                    sys.exit(1)
-                else:
-                    group_label_names.add(group["label_name"])
-        if group_label_names and (group_label_names & set(labels)):
-            logging.error("Some label names in group_by are the same as AWS account labels!")
-            sys.exit(1)
-
 
 def main(config):
     start_http_server(config["exporter_port"])

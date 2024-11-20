@@ -111,7 +111,6 @@ class MetricExporter:
             region_name="us-east-1",
         )
         cost_response = self.query_aws_cost_explorer(aws_client, self.group_by)
-        print(cost_response)
 
         for result in cost_response:
             if not self.group_by["enabled"]:
