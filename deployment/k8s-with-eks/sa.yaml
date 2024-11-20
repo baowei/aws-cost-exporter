@@ -3,5 +3,5 @@ automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::135468794354:role/aws-cost-exporter-irsa
+    eks.amazonaws.com/role-arn: arn:aws:iam::711891019284:role/CostExporterRoleClusterCtaStaging
   name: aws-cost-exporter

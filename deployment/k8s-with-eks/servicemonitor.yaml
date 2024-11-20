@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: aws-cost-exporter
+  labels:
+    app.kubernetes.io/name: aws-cost-exporter
+spec:
+  endpoints:
+    - port: http-metrics
+  jobLabel: aws-cost-exporter
+  namespaceSelector:
+    matchNames:
+      - monitor
+  selector:
+    matchLabels:
+      app: aws-cost-exporter
+      app.kubernetes.io/name: aws-cost-exporter
+

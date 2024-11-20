@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: aws-cost-exporter
   labels:
+    app: aws-cost-exporter
     app.kubernetes.io/name: aws-cost-exporter
 spec:
   replicas: 1
@@ -18,7 +19,7 @@ spec:
       serviceAccountName: aws-cost-exporter
       containers:
         - name: aws-cost-exporter
-          image: "opensourceelectrolux/aws-cost-exporter:v1.0.6"
+          image: "ghcr.io/baowei/aws-cost-exporter:v0.0.1"
           command: [ "python", "main.py", "-c", "/exporter_config.yaml" ]
           imagePullPolicy: Always
           ports:
