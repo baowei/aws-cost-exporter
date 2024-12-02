@@ -22,50 +22,56 @@ metrics:
         threshold: 10
         tag_value: other
     # Allowed values for metric type are AmortizedCost, BlendedCost, NetAmortizedCost, NetUnblendedCost, NormalizedUsageAmount, UnblendedCost, and UsageQuantity
-    metric_type: AmortizedCost
+    metric_type: BlendedCost
 
-  - metric_name: aws_daily_cost_usd_by_tag_project_service # change the metric name if needed
-    group_by:
-      enabled: true
-      groups:
-        - type: TAG
-          key: cost_project
-          label_name: TagByProject
-        - type: TAG
-          key: cost_service
-          label_name: TagByService
-      merge_minor_cost:
-        # if this is enabled, minor cost that is below the threshold will be merged into one group
-        enabled: false
-        threshold: 10
-        tag_value: other
-    # Allowed values for metric type are AmortizedCost, BlendedCost, NetAmortizedCost, NetUnblendedCost, NormalizedUsageAmount, UnblendedCost, and UsageQuantity
-    metric_type: AmortizedCost
-
-  - metric_name: aws_daily_cost_usd_by_tag_region_project # change the metric name if needed
-    group_by:
-      enabled: true
-      groups:
-        - type: DIMENSION
-          key: REGION
-          label_name: RegionName
-        - type: TAG
-          key: cost_project
-          label_name: TagByProject
-      merge_minor_cost:
-        # if this is enabled, minor cost that is below the threshold will be merged into one group
-        enabled: false
-        threshold: 10
-        tag_value: other
-    # Allowed values for metric type are AmortizedCost, BlendedCost, NetAmortizedCost, NetUnblendedCost, NormalizedUsageAmount, UnblendedCost, and UsageQuantity
-    metric_type: AmortizedCost
+#  - metric_name: aws_daily_cost_usd_by_tag_project_service # change the metric name if needed
+#    group_by:
+#      enabled: true
+#      groups:
+#        - type: TAG
+#          key: cost_project
+#          label_name: TagByProject
+#        - type: TAG
+#          key: cost_service
+#          label_name: TagByService
+#      merge_minor_cost:
+#        # if this is enabled, minor cost that is below the threshold will be merged into one group
+#        enabled: false
+#        threshold: 10
+#        tag_value: other
+#    # Allowed values for metric type are AmortizedCost, BlendedCost, NetAmortizedCost, NetUnblendedCost, NormalizedUsageAmount, UnblendedCost, and UsageQuantity
+#    metric_type: AmortizedCost
+#
+#  - metric_name: aws_daily_cost_usd_by_tag_region_project # change the metric name if needed
+#    group_by:
+#      enabled: true
+#      groups:
+#        - type: DIMENSION
+#          key: REGION
+#          label_name: RegionName
+#        - type: TAG
+#          key: cost_project
+#          label_name: TagByProject
+#      merge_minor_cost:
+#        # if this is enabled, minor cost that is below the threshold will be merged into one group
+#        enabled: false
+#        threshold: 10
+#        tag_value: other
+#    # Allowed values for metric type are AmortizedCost, BlendedCost, NetAmortizedCost, NetUnblendedCost, NormalizedUsageAmount, UnblendedCost, and UsageQuantity
+#    metric_type: AmortizedCost
 
 target_aws_accounts:
   # here defines a list of target AWS accounts
   # it should be guaranteed that all the AWS accounts have the same set of keys (in this example they are Publisher, ProjectName, and EnvironmentName)
-  - Publisher: 234567890123
-    ProjectName: dev-team-1
+  - Publisher: 711891019284
+    ProjectName: cta-staging
     EnvironmentName: dev
-  - Publisher: 321645789123
-    ProjectName: dev-team-2
-    EnvironmentName: dev
+  - Publisher: 373106173498
+    ProjectName: legacy
+    EnvironmentName: prod
+#  - Publisher: 618443055614
+#    ProjectName: transfer-prod
+#    EnvironmentName: prod
+#  - Publisher: 733691812639
+#    ProjectName: prop-prod
+#    EnvironmentName: prod

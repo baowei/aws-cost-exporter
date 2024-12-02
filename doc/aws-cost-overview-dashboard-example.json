@@ -1,59 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "barchart",
-      "name": "Bar chart",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.2.0"
-    },
-    {
-      "type": "panel",
-      "id": "piechart",
-      "name": "Pie chart",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "text",
-      "name": "Text",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -73,9 +18,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 242,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -93,31 +37,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 5,
-        "x": 0,
-        "y": 1
-      },
-      "id": 8,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "<img src=\"https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg\" style=\"background-color: white; width: 100%; padding: 10px; margin-bottom: 20px;\">\n<h4>AWS Cost Overview</h4>\n<p>This dashboard summarizes your costs of AWS products.</p>",
-        "mode": "html"
-      },
-      "pluginVersion": "10.2.0",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${DataSource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -141,7 +61,7 @@
       "gridPos": {
         "h": 9,
         "w": 4,
-        "x": 5,
+        "x": 0,
         "y": 1
       },
       "id": 1,
@@ -150,6 +70,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "last"
@@ -161,18 +82,18 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "11.2.1",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "sum (max_over_time(aws_cost[24h] offset -24h))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+            "uid": "${DataSource}"
+          },
+          "editorMode": "code",
+          "expr": "sum (max_over_time(aws_daily_cost_usd[24h] offset -24h))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "AWS Total Costs",
@@ -181,7 +102,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${DataSource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -205,12 +126,18 @@
       "gridPos": {
         "h": 9,
         "w": 5,
-        "x": 9,
+        "x": 4,
         "y": 1
       },
       "id": 3,
       "options": {
         "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
         "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
@@ -227,19 +154,19 @@
         "sizing": "auto",
         "valueMode": "color"
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "11.2.1",
       "targets": [
         {
           "alias": "",
-          "editorMode": "code",
-          "expr": "sum by (Publisher) (max_over_time(aws_cost[24h] offset -24h))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+            "uid": "${DataSource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (Publisher) (max_over_time(aws_daily_cost_usd[24h] offset -24h))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Costs per AWS Account",
@@ -247,8 +174,9 @@
     },
     {
       "datasource": {
+        "default": false,
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${DataSource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -271,7 +199,7 @@
       "gridPos": {
         "h": 9,
         "w": 5,
-        "x": 14,
+        "x": 9,
         "y": 1
       },
       "id": 14,
@@ -297,17 +225,17 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${DataSource}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (RegionName) (max_over_time(aws_cost[24h] offset -24h))",
+          "expr": "sum by (RegionName) (max without (instance, pod) (max_over_time(aws_daily_cost_usd[24h] offset -24h)))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -323,8 +251,9 @@
     },
     {
       "datasource": {
+        "default": false,
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${DataSource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -347,7 +276,7 @@
       "gridPos": {
         "h": 9,
         "w": 5,
-        "x": 19,
+        "x": 14,
         "y": 1
       },
       "id": 15,
@@ -374,17 +303,17 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${DataSource}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (ProjectName) (max_over_time(aws_cost[24h] offset -24h))",
+          "expr": "sum by (ProjectName) (max without (instance, pod) (max_over_time(aws_daily_cost_usd[24h] offset -24h)))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -395,7 +324,86 @@
           "useBackend": false
         }
       ],
-      "title": "Costs per Project",
+      "title": "Costs per Account",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${DataSource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 5,
+        "x": 19,
+        "y": 1
+      },
+      "id": 18,
+      "options": {
+        "displayLabels": [
+          "name",
+          "value"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false,
+          "values": []
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DataSource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (RegionName, TagByProject) (max without (instance, pod) (max_over_time(aws_daily_cost_usd_by_tag_region_project[24h] offset -24h)))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "1d",
+          "legendFormat": "{{RegionName}}: {{TagByProject}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Costs per Account",
       "type": "piechart"
     },
     {
@@ -413,8 +421,9 @@
     },
     {
       "datasource": {
+        "default": false,
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${DataSource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -453,7 +462,7 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "currencyUSD"
         },
         "overrides": [
           {
@@ -483,7 +492,9 @@
         "fullHighlight": false,
         "groupWidth": 0.7,
         "legend": {
-          "calcs": [],
+          "calcs": [
+            "last"
+          ],
           "displayMode": "list",
           "placement": "right",
           "showLegend": true
@@ -491,6 +502,9 @@
         "orientation": "auto",
         "showValue": "never",
         "stacking": "normal",
+        "text": {
+          "valueSize": 4
+        },
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -499,17 +513,17 @@
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "11.3.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${DataSource}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by(Publisher, RegionName) (max_over_time(aws_cost[24h] offset -24h))",
+          "expr": "sum by (Publisher,ServiceName) (max without (instance, pod) (max_over_time(aws_daily_cost_usd{Publisher=\"$awsAccount\"}[24h] offset -24h)))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -520,15 +534,337 @@
           "useBackend": false
         }
       ],
-      "title": "Costs per AWS Account and Region",
+      "title": "Costs per AWS Account and ServiceName",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${DataSource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:YYYY-MM-DD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 17,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "normal",
+        "text": {
+          "valueSize": 4
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DataSource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by(Publisher, RegionName, TagByProject) (max without (instance, pod) (max without (instance, pod) (max_over_time(aws_daily_cost_usd_by_tag_region_project{Publisher=\"$awsAccount\",RegionName=~\"$region\"}[24h] offset -24h))))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "1d",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Costs per AWS Account by Project",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${DataSource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "time:YYYY-MM-DD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 19,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "normal",
+        "text": {
+          "valueSize": 4
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DataSource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by(Publisher, TagByProject, TagByService) (max without (instance, pod) (max_over_time(aws_daily_cost_usd_by_tag_project_service{Publisher=\"$awsAccount\"}[24h] offset -24h)))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "interval": "1d",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Costs per AWS Account by Project and Service",
       "type": "barchart"
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "prometheus"
+        },
+        "description": "prometheus",
+        "hide": 2,
+        "includeAll": false,
+        "label": "DataSource",
+        "multi": false,
+        "name": "DataSource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "733691812639",
+          "value": "733691812639"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DataSource}"
+        },
+        "definition": "label_values(aws_daily_cost_usd,Publisher)",
+        "description": "aws account id",
+        "hide": 0,
+        "includeAll": false,
+        "label": "awsAccount",
+        "multi": false,
+        "name": "awsAccount",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(aws_daily_cost_usd,Publisher)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "ap-northeast-1",
+            "global",
+            "us-east-1"
+          ],
+          "value": [
+            "ap-northeast-1",
+            "global",
+            "us-east-1"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DataSource}"
+        },
+        "definition": "label_values(aws_daily_cost_usd{Publisher=\"$awsAccount\"},RegionName)",
+        "description": "aws region",
+        "hide": 0,
+        "includeAll": false,
+        "label": "region",
+        "multi": true,
+        "name": "region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(aws_daily_cost_usd{Publisher=\"$awsAccount\"},RegionName)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-7d",
@@ -536,8 +872,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "AWS Cost Dashboard Example v2",
+  "title": "AWS Cost Dashboard",
   "uid": "d2e1f7a9-bb75-4a48-ac69-0087ffb196d3",
-  "version": 1,
+  "version": 6,
   "weekStart": ""
 }

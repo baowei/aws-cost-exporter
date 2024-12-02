@@ -7,6 +7,7 @@ metadata:
 spec:
   endpoints:
     - port: http-metrics
+      interval: 28800s
   jobLabel: aws-cost-exporter
   namespaceSelector:
     matchNames:
