@@ -19,7 +19,7 @@ spec:
       serviceAccountName: aws-cost-exporter
       containers:
         - name: aws-cost-exporter
-          image: "ghcr.io/baowei/aws-cost-exporter:v0.0.2"
+          image: "ghcr.io/baowei/aws-cost-exporter:v0.0.1"
           command: [ "python", "main.py", "-c", "/exporter_config.yaml" ]
           imagePullPolicy: Always
           ports:

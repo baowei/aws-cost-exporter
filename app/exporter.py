@@ -89,7 +89,7 @@ class MetricExporter:
 
         response = aws_client.get_cost_and_usage(
             TimePeriod={"Start": start_date.strftime("%Y-%m-%d"), "End": end_date.strftime("%Y-%m-%d")},
-            # Filter={"Dimensions": {"Key": "RECORD_TYPE", "Values": ["Usage"]}},
+            Filter={"Dimensions": {"Key": "RECORD_TYPE", "Values": ["Usage"]}},
             Granularity="DAILY",
             Metrics=[self.metric_type],  # Use dynamic metrics
             GroupBy=groups,
