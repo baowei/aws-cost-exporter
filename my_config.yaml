@@ -1,0 +1,86 @@
+exporter_port: $EXPORTER_PORT|9090 # the port that exposes cost metrics
+polling_interval_seconds: $POLLING_INTERVAL_SECONDS|28800 # by default it is 8 hours because for daily cost, AWS only updates the data once per day
+
+aws_access_key: $AWS_ACCESS_KEY|"" # for prod deployment, DO NOT put the actual value here or default is null ("") to use iam-role/irsa
+aws_access_secret: $AWS_ACCESS_SECRET|"" # for prod deployment, DO NOT put the actual value here or default is set null ("") to use iam-role/irsa
+aws_assumed_role_name: CostExporterRole
+
+metrics:
+  - metric_name: aws_monthly_cost_usage_usd #实际资源消耗费用，无关SavingPlans
+    group_by:
+      enabled: true
+      groups: # If group_by is enabled, there should be at least one group, and at most two groups!
+        - type: DIMENSION
+          key: SERVICE
+          label_name: ServiceName
+        - type: DIMENSION
+          key: REGION
+          label_name: RegionName
+      merge_minor_cost:
+        enabled: true
+        threshold: 5
+        tag_value: other
+    metric_type: UnblendedCost
+    record_types:
+      - Usage
+      - SavingsPlanCoveredUsage
+    granularity: MONTHLY
+  - metric_name: aws_monthly_cost_saving_plan_usd #减去SavingsPlan覆盖费用
+    group_by:
+      enabled: true
+      groups: # If group_by is enabled, there should be at least one group, and at most two groups!
+        - type: DIMENSION
+          key: SERVICE
+          label_name: ServiceName
+        - type: DIMENSION
+          key: USAGE_TYPE
+          label_name: UsageType
+      merge_minor_cost:
+        enabled: true
+        threshold: 5
+        tag_value: other
+    metric_type: UnblendedCost
+    record_types:
+      - Usage
+    granularity: MONTHLY
+  - metric_name: aws_daily_cost_usd # change the metric name if needed
+    group_by:
+      enabled: true
+      groups:
+        - type: DIMENSION
+          key: SERVICE
+          label_name: ServiceName
+        - type: DIMENSION
+          key: REGION
+          label_name: RegionName
+      merge_minor_cost:
+        enabled: true
+        threshold: 5
+        tag_value: other
+    metric_type: UnblendedCost
+    granularity: DAILY
+    record_types:
+      - Usage
+      - SavingsPlanCoveredUsage
+  - metric_name: aws_daily_cost_by_tag_project # change the metric name if needed
+    group_by:
+      enabled: true
+      groups:
+        - type: DIMENSION
+          key: REGION
+          label_name: RegionName
+        - type: TAG
+          key: cost_project
+          label_name: TagByProject
+      merge_minor_cost:
+        enabled: false
+        threshold: 5
+        tag_value: other
+    metric_type: UnblendedCost
+    granularity: DAILY
+    record_types:
+      - Usage
+      - SavingsPlanCoveredUsage
+target_aws_accounts:
+  - Publisher: 111891123123
+    EnvironmentName: staging
