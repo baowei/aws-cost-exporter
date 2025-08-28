@@ -65,6 +65,7 @@ class MetricExporter:
         metric_description = f"{self.granularity.lower().capitalize()} cost of an AWS account in USD"
         if self.granularity == "MONTHLY":
             metric_description = "Month-to-date cost of an AWS account in USD"
+            self.labels.add("Monthly")
             
         self.cost_metric = Gauge(
             self.metric_name,
@@ -107,13 +108,16 @@ class MetricExporter:
         
         # Set start date based on granularity
         if self.granularity == "DAILY":
-            start_date = end_date - relativedelta(days=1)
+            start_date = end_date - relativedelta(days=2)
+            end_date = end_date - relativedelta(days=1)
         elif self.granularity == "MONTHLY":
             # First day of current month for month-to-date
-            start_date = datetime(end_date.year, end_date.month, 1)
+            start_date = datetime(end_date.year, end_date.month, 1) - relativedelta(months=1)
+            end_date = datetime(end_date.year, end_date.month, 1)
         else:
             # Default to daily if granularity is not recognized
-            start_date = end_date - relativedelta(days=1)
+            start_date = end_date - relativedelta(days=2)
+            end_date = end_date - relativedelta(days=1)
 
         # Keep the 'groups' code as specified
         groups = list()
@@ -121,7 +125,7 @@ class MetricExporter:
             for group in group_by["groups"]:
                 groups.append({"Type": group["type"], "Key": group["key"]})
 
-        # Build the base filter with RECORD_TYPE
+        # Build the base filter with RECORD_TYPE, on aws dashboard it is called "Charge Type"
         base_filter = {"Dimensions": {"Key": "RECORD_TYPE", "Values": self.record_types}}
 
         # Include tag filters if provided
@@ -164,9 +168,10 @@ class MetricExporter:
             else:
                 break
 
-        return results
+        return results, start_date
 
     def fetch(self, aws_account):
+        global cost
         if self.aws_assumed_role_name:
             # assume role first
             aws_credentials = self.get_aws_account_session_via_iam_role(aws_account["Publisher"])
@@ -194,7 +199,7 @@ class MetricExporter:
                 )
 
         # Pass tag_filters to query_aws_cost_explorer
-        cost_response = self.query_aws_cost_explorer(
+        cost_response, start_date = self.query_aws_cost_explorer(
             aws_client,
             self.group_by,
             self.tag_filters,  # Include tag filters
@@ -202,8 +207,10 @@ class MetricExporter:
 
         for result in cost_response:
             if not self.group_by["enabled"]:
-                cost = float(result["Total"][self.metric_type]["Amount"])
-                self.cost_metric.labels(**aws_account, ChargeType="Usage").set(cost)
+                label_values = dict(**aws_account, ChargeType="Usage")
+                if self.granularity == "MONTHLY":
+                    label_values["Monthly"] = str(start_date.month)
+                self.cost_metric.labels(**label_values).set(cost)
             else:
                 merged_minor_cost = 0
                 for item in result["Groups"]:
@@ -234,6 +241,9 @@ class MetricExporter:
                     ):
                         merged_minor_cost += cost
                     else:
+                        # self.cost_metric.labels(**aws_account, **group_key_values, ChargeType="Usage").set(cost)
+                        if self.granularity == "MONTHLY":
+                            group_key_values["Monthly"] = str(start_date.month)
                         self.cost_metric.labels(**aws_account, **group_key_values, ChargeType="Usage").set(cost)
 
                 if merged_minor_cost > 0:
@@ -250,6 +260,8 @@ class MetricExporter:
                                 group_key_values[alias["label"]] = alias_value
                         else:
                             group_key_values[group["label_name"]] = merged_value
+                    if self.granularity == "MONTHLY":
+                        group_key_values["Monthly"] = str(start_date.month)
                     self.cost_metric.labels(**aws_account, **group_key_values, ChargeType="Usage").set(
                         merged_minor_cost
                     )

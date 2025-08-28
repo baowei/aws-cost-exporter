@@ -20,7 +20,7 @@ def handle_sigint(sig, frame):
 
 
 def get_configs():
-    parser = argparse.ArgumentParser(description="AWS Cost Exporter, exposing AWS cost data as Prometheus metrics.")
+    parser = argparse.ArgumentParser(prog="awsCostExporter", description="AWS Cost Exporter, exposing AWS cost data as Prometheus metrics.")
     parser.add_argument(
         "-c",
         "--config",

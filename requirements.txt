@@ -1,5 +1,5 @@
-boto3==1.35.8
-botocore==1.35.8
+boto3==1.40.17
+botocore==1.40.17
 envyaml==1.10.211231
-prometheus_client==0.17.0
-python_dateutil==2.8.2
+prometheus_client==0.22.1
+python-dateutil==2.8.2
